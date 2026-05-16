@@ -592,11 +592,9 @@ interface Todo {
 
 ### Entity-Relationship Diagram
 
-[!erd](https://res.cloudinary.com/dmx8hcmxh/image/upload/v1778906893/todo.drawio_lrvdht.png)
+![erd](https://res.cloudinary.com/dmx8hcmxh/image/upload/v1778906893/todo.drawio_lrvdht.png)
 
 Relasi: One-to-Many
 - Satu kategori dapat memiliki banyak todo
 - Setiap todo harus memiliki satu kategori
 ```
-
----
