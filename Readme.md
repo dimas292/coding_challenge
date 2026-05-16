@@ -1,64 +1,64 @@
 # Coding Challenge Todo App
 
-## Daftar Isi
+## Table of Contents
 
-1. [Pendahuluan](#pendahuluan)
-2. [Persiapan dan Instalasi](#persiapan-dan-instalasi)
-3. [Arsitektur](#arsitektur)
-   - [Struktur Folder](#struktur-folder)
-   - [Komponen](#komponen)
-   - [Alur Program](#alur-program)
-4. [Dokumentasi Frontend](#dokumentasi-frontend)
-   - [Struktur Aplikasi](#struktur-aplikasi)
-   - [Komponen React](#komponen-react)
+1. [Introduction](#introduction)
+2. [Setup and Installation](#setup-and-installation)
+3. [Architecture](#architecture)
+   - [Folder Structure](#folder-structure)
+   - [Components](#components)
+   - [Program Flow](#program-flow)
+4. [Frontend Documentation](#frontend-documentation)
+   - [Application Structure](#application-structure)
+   - [React Components](#react-components)
    - [Context API](#context-api)
    - [Custom Hooks](#custom-hooks)
    - [Services](#services)
-   - [Utils dan Constants](#utils-dan-constants)
-5. [Dokumentasi API](#dokumentasi-api)
+   - [Utils and Constants](#utils-and-constants)
+5. [API Documentation](#api-documentation)
    - [RESTful API](#restful-api)
-   - [Contoh Penggunaan API](#contoh-penggunaan-api)
-6. [Database Skema](#database-skema)
-   - [Tabel Database](#tabel-database)
-   - [Relasi](#relasi)
-   - [Model](#model)
+   - [API Usage Examples](#api-usage-examples)
+6. [Database Schema](#database-schema)
+   - [Database Tables](#database-tables)
+   - [Relations](#relations)
+   - [Models](#models)
    - [Entity-Relationship Diagram](#entity-relationship-diagram)
 
 ---
 
-## Pendahuluan
+## Introduction
 
-Coding Challenge adalah aplikasi manajemen tugas (Todo Management System) yang dibangun dengan teknologi modern. Aplikasi ini memungkinkan pengguna untuk membuat, mengelola, dan melacak daftar tugas dengan kategori dan prioritas. Sistem ini terdiri dari backend API menggunakan Go dan Gin Framework, frontend menggunakan React UI Ant Design dengan TypeScript, serta database PostgreSQL.
+Coding Challenge is a modern Todo Management System application. It enables users to create, manage, and track task lists with categories and priorities. The system consists of a backend API using Go and Gin Framework, a frontend built with React and TypeScript using Ant Design UI, and a PostgreSQL database.
 
 ---
 
-## Persiapan dan Instalasi
+## Setup and Installation
 
-### Prasyarat
+### Prerequisites
 
-- Docker dan Docker Compose
-- Node.js v20+ (untuk development lokal)
-- Go v1.26+ (untuk development lokal)
-- PostgreSQL 16 (untuk development lokal)
+- Docker and Docker Compose
+- Node.js v20+ (for local development)
+- Go v1.26+ (for local development)
+- PostgreSQL 16 (for local development)
 
-### Setup dengan Docker Compose
+### Setup with Docker Compose
 
 ```bash
 # Clone repository
 git clone https://github.com/dimas292/coding_challenge.git
 cd coding_challenge
 
-# Build dan jalankan container
+# Build and run containers
 docker compose build
 docker compose up -d
 
-# Akses aplikasi
+# Access the application
 # Frontend: http://localhost:5173
 # Backend: http://localhost:4444
 # Database: localhost:5432
 ```
 
-### Setup Lokal Development
+### Local Development Setup
 
 ```bash
 # Backend
@@ -66,27 +66,41 @@ cd backend
 go mod download
 go run main.go
 
-# Frontend (terminal baru)
+# Frontend (new terminal)
 cd frontend
 npm install
 npm run dev
 ```
 
+### Environment Variables (.env)
+
+Store sensitive data in `.env` file (don't commit). Example `.env` file:
+
+```env
+DB_HOST=localhost
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=todo_db
+VITE_API_URL=http://localhost:4444/api
+```
+
+Use [.env.example](.env.example) as a template, then copy to `.env`.
+
 ---
 
-## Arsitektur
+## Architecture
 
-### Struktur Folder
+### Folder Structure
 
 ```
 coding_challenge/
 ├── backend/
-│   ├── config/          # Konfigurasi aplikasi
-│   ├── database/        # Koneksi dan seed database
-│   ├── handler/         # Request handler
-│   ├── model/           # Data model
+│   ├── config/          # Application configuration
+│   ├── database/        # Database connection and seeding
+│   ├── handler/         # Request handlers
+│   ├── model/           # Data models
 │   ├── repository/      # Data access layer
-│   ├── router/          # Route definition
+│   ├── router/          # Route definitions
 │   ├── server/          # Server setup
 │   ├── service/         # Business logic
 │   ├── utils/           # Utility functions
@@ -104,17 +118,17 @@ coding_challenge/
 │   │   └── main.tsx     # Entry point
 │   ├── package.json
 │   └── Dockerfile
-├── docker-compose.yaml  # Compose configuration
+├── docker-compose.yaml  # Docker Compose configuration
 └── README.md
 ```
 
-### Komponen
+### Components
 
 **Backend:**
 
 - **Gin Framework**: REST API web framework
-- **GORM**: ORM untuk database management
-- **PostgreSQL**: Database relasional
+- **GORM**: ORM for database management
+- **PostgreSQL**: Relational database
 - **CORS**: Cross-Origin Resource Sharing
 
 **Frontend:**
@@ -130,24 +144,24 @@ coding_challenge/
 - **PostgreSQL 16**: Database server
 - **Docker Volume**: Persistent data storage
 
-### Alur Program
+### Program Flow
 
 ```
-1. User membuka Frontend (React)
-2. Frontend mengirim request ke Backend API (http://localhost:4444/api)
-3. Backend (Gin) menerima request dan validasi
-4. Handler memproses logika bisnis via Service
-5. Service mengakses data via Repository
-6. Repository query ke PostgreSQL
-7. Data dikembalikan ke Frontend dengan JSON response
-8. Frontend update UI berdasarkan response
+1. User opens Frontend (React)
+2. Frontend sends request to Backend API (http://localhost:4444/api)
+3. Backend (Gin) receives request and validates
+4. Handler processes business logic via Service
+5. Service accesses data via Repository
+6. Repository queries PostgreSQL
+7. Data returned to Frontend as JSON response
+8. Frontend updates UI based on response
 ```
 
 ---
 
-## Frontend
+## Frontend Documentation
 
-### Struktur Aplikasi
+### Application Structure
 
 ```
 src/
@@ -157,90 +171,90 @@ src/
 ├── App.css              # App component styles
 ├── components/
 │   ├── ui/              # UI components
-│   │   ├── TodoHeader.tsx       # Header dengan tombol tambah
+│   │   ├── TodoHeader.tsx       # Header with add button
 │   │   ├── SearchBar.tsx        # Search input
 │   │   └── FilterBar.tsx        # Filter by category/priority/status
-│   ├── DataTable.tsx    # Main table untuk menampilkan todos
-│   ├── TableColumns.tsx # Column definition untuk table
-│   ├── CreateTodo.tsx   # Komponen untuk create todo
-│   ├── EditTodo.tsx     # Komponen untuk edit todo
-│   └── DrawerForm.tsx   # Form drawer untuk create/edit
+│   ├── DataTable.tsx    # Main table displaying todos
+│   ├── TableColumns.tsx # Column definitions for table
+│   ├── CreateTodo.tsx   # Create todo component
+│   ├── EditTodo.tsx     # Edit todo component
+│   └── DrawerForm.tsx   # Form drawer for create/edit
 ├── context/
-│   └── TodoContext.tsx  # Context untuk state management
+│   └── TodoContext.tsx  # Context for state management
 ├── hooks/
-│   ├── useTodoFetch.ts  # Hook untuk fetch todos dari API
-│   └── useFormSubmit.ts # Hook untuk submit form
+│   ├── useTodoFetch.ts  # Hook for fetching todos
+│   └── useFormSubmit.ts # Hook for form submission
 ├── services/
-│   ├── TodoService.ts   # API calls untuk todo
-│   └── CategoryService.ts # API calls untuk category
+│   ├── TodoService.ts   # API calls for todos
+│   └── CategoryService.ts # API calls for categories
 └── utils/
-    ├── constants.ts     # Konstanta aplikasi
+    ├── constants.ts     # Application constants
     ├── dateUtils.ts     # Date manipulation utilities
-    └── tagRenderer.tsx  # Utility untuk render tag/badge
+    └── tagRenderer.tsx  # Utility for rendering tags/badges
 ```
 
-### Komponen React
+### React Components
 
 #### 1. **App.tsx** (Main Component)
 
-Komponen utama yang mengatur layout dan state keseluruhan aplikasi:
+Main component that manages layout and overall application state:
 
-- Mengelola pagination state
-- Mengelola filter state (search, priority, category, completed)
-- Memanggil `useTodoFetch` hook untuk fetch data
-- Render header, search bar, filter bar, dan data table
+- Manages pagination state
+- Manages filter state (search, priority, category, completed)
+- Calls `useTodoFetch` hook to fetch data
+- Renders header, search bar, filter bar, and data table
 
 ```tsx
-// Menggunakan Context
+// Using Context
 const { openDrawer, todosVersion, todos } = UseTodo();
 const { loading, fetchTodos } = useTodoFetch();
 ```
 
 #### 2. **DataTable.tsx** (Table Component)
 
-Menampilkan daftar todos dalam format table dengan fitur:
+Displays todos in table format with features:
 
 - Pagination
 - Sorting
-- Column definition dari `TableColumns.tsx`
+- Column definitions from `TableColumns.tsx`
 - Row actions (edit/delete)
 
 #### 3. **CreateTodo.tsx** (Create Dialog)
 
-Wrapper component untuk menampilkan drawer form ketika mode adalah "create":
+Wrapper component displaying drawer form in "create" mode:
 
-- Fetch kategori dari API saat drawer dibuka
-- Pass kategori options ke `DrawerForm`
+- Fetches categories from API when drawer opens
+- Passes category options to `DrawerForm`
 
 #### 4. **EditTodo.tsx** (Edit Dialog)
 
-Wrapper component untuk menampilkan drawer form ketika mode adalah "edit":
+Wrapper component displaying drawer form in "edit" mode:
 
-- Fetch data todo yang akan diedit
-- Populate form dengan data existing
-- Submit update ke API
+- Fetches todo data to edit
+- Populates form with existing data
+- Submits updates to API
 
 #### 5. **DrawerForm.tsx** (Form Component)
 
-Komponen form reusable untuk create dan edit:
+Reusable form component for create and edit:
 
-- Input: title, description, category, priority, due_date
-- Validasi form
-- Handle submit dengan `useFormSubmit` hook
+- Inputs: title, description, category, priority, due_date
+- Form validation
+- Handles submit with `useFormSubmit` hook
 
 #### 6. **UI Components** (`components/ui/`)
 
-Komponen UI tambahan:
+Additional UI components:
 
-- **TodoHeader**: Header dengan tombol "Add Todo"
-- **SearchBar**: Input pencarian dengan debouncing
-- **FilterBar**: Select untuk filter priority, category, dan status
+- **TodoHeader**: Header with "Add Todo" button
+- **SearchBar**: Search input with debouncing
+- **FilterBar**: Select for filtering priority, category, and status
 
 ### Context API
 
 #### **TodoContext.tsx**
 
-State management global menggunakan Context API:
+Global state management using Context API:
 
 ```tsx
 interface Todo {
@@ -255,13 +269,13 @@ interface Todo {
 }
 
 interface TodoContextType {
-  todos: Todo[]; // List todos
+  todos: Todo[]; // List of todos
   setTodos: (todos: Todo[]) => void; // Set todos
-  addTodo: (todo: Todo) => void; // Add todo ke list
-  deleteTodo: (id: number) => void; // Remove todo dari list
-  editTodo: (updatedTodo: Todo) => void; // Update todo di list
+  addTodo: (todo: Todo) => void; // Add todo to list
+  deleteTodo: (id: number) => void; // Remove todo from list
+  editTodo: (updatedTodo: Todo) => void; // Update todo in list
   refreshTodos: () => void; // Trigger re-fetch
-  editingTodoId: number | null; // ID todo yang sedang di-edit
+  editingTodoId: number | null; // ID of todo being edited
   drawerOpen: boolean; // Drawer visibility
   openDrawer: (todoId?: number) => void; // Open drawer
   closeDrawer: () => void; // Close drawer
@@ -273,13 +287,13 @@ interface TodoContextType {
 }
 ```
 
-Digunakan dengan hook: `const context = UseTodo()`
+Used with hook: `const context = UseTodo()`
 
 ### Custom Hooks
 
 #### 1. **useTodoFetch.ts**
 
-Hook untuk fetch data todos dari backend:
+Hook for fetching todos from backend:
 
 ```tsx
 const { loading, fetchTodos } = useTodoFetch();
@@ -296,15 +310,15 @@ const pagination = await fetchTodos(
 // Returns: { current_page, per_page, total, total_pages }
 ```
 
-**Fitur:**
+**Features:**
 
-- Prevent multiple simultaneous fetches dengan ref
-- Error handling dengan notification
-- TypeScript generics untuk response typing
+- Prevents multiple simultaneous fetches using ref
+- Error handling with notifications
+- TypeScript generics for response typing
 
 #### 2. **useFormSubmit.ts**
 
-Hook untuk handle form submission:
+Hook for handling form submission:
 
 ```tsx
 const { handleFormSubmit } = useFormSubmit();
@@ -312,23 +326,23 @@ const { handleFormSubmit } = useFormSubmit();
 // Usage:
 await handleFormSubmit({
   form, // Ant Design Form instance
-  mode, // "create" atau "edit"
-  initialData, // Data untuk edit mode
-  onSuccess, // Callback setelah submit
+  mode, // "create" or "edit"
+  initialData, // Data for edit mode
+  onSuccess, // Callback after submit
 });
 ```
 
-**Fitur:**
+**Features:**
 
-- Call CreateTodo atau UpdateTodo sesuai mode
-- Show success/error notification
-- Call onSuccess callback
+- Calls CreateTodo or UpdateTodo based on mode
+- Shows success/error notifications
+- Calls onSuccess callback
 
 ### Services
 
 #### 1. **TodoService.ts**
 
-API calls untuk todo management:
+API calls for todo management:
 
 ```tsx
 // Create new todo
@@ -343,7 +357,7 @@ DeleteTodo(id: number): Promise<any>
 
 #### 2. **CategoryService.ts**
 
-API calls untuk category management:
+API calls for category management:
 
 ```tsx
 // Get all categories
@@ -353,23 +367,23 @@ GetCategory(): Promise<{ data: Category[] }>
 GetCategoryById(id: number): Promise<{ data: Category }>
 ```
 
-**Base URL**: Menggunakan environment variable `VITE_API_URL` (default: `http://localhost:4444/api`)
+**Base URL**: Uses environment variable `VITE_API_URL` (default: `http://localhost:4444/api`)
 
-### Utils dan Constants
+### Utils and Constants
 
 #### **constants.ts**
 
-Konstanta global aplikasi:
+Global application constants:
 
 ```tsx
-// Priority options untuk filter dan select
+// Priority options for filter and select
 export const PRIORITY_OPTIONS = [
   { text: "Low", value: "low" },
   { text: "Medium", value: "medium" },
   { text: "High", value: "high" },
 ];
 
-// Color mapping untuk priority
+// Color mapping for priority
 export const PRIORITY_COLOR_MAP = {
   high: "red",
   medium: "orange",
@@ -391,64 +405,64 @@ export const FORM_MODE = {
 
 #### **dateUtils.ts**
 
-Utility functions untuk date handling:
+Utility functions for date handling:
 
-- Format date ke display format
-- Parse date dari API response
+- Format date to display format
+- Parse date from API response
 
 #### **tagRenderer.tsx**
 
-Utility untuk render tag dan badge di table
+Utility for rendering tags and badges in table
 
 ---
 
-## Dokumentasi API
+## API Documentation
 
 ### RESTful API
 
-#### Endpoints Todo
+#### Todo Endpoints
 
-| Method | Endpoint         | Deskripsi                           |
-| ------ | ---------------- | ----------------------------------- |
-| POST   | `/api/todos/`    | Buat todo baru                      |
-| GET    | `/api/todos/`    | Dapatkan semua todo (dengan filter) |
-| GET    | `/api/todos/:id` | Dapatkan todo by ID                 |
-| PUT    | `/api/todos/:id` | Update todo                         |
-| DELETE | `/api/todos/:id` | Hapus todo                          |
+| Method | Endpoint         | Description                  |
+| ------ | ---------------- | ---------------------------- |
+| POST   | `/api/todos/`    | Create a new todo            |
+| GET    | `/api/todos/`    | Get all todos (with filters) |
+| GET    | `/api/todos/:id` | Get todo by ID               |
+| PUT    | `/api/todos/:id` | Update todo                  |
+| DELETE | `/api/todos/:id` | Delete todo                  |
 
-#### Endpoints Category
+#### Category Endpoints
 
-| Method | Endpoint            | Deskripsi               |
-| ------ | ------------------- | ----------------------- |
-| POST   | `/api/category/`    | Buat kategori baru      |
-| GET    | `/api/category/`    | Dapatkan semua kategori |
-| GET    | `/api/category/:id` | Dapatkan kategori by ID |
-| PUT    | `/api/category/`    | Update kategori         |
-| DELETE | `/api/category/:id` | Hapus kategori          |
+| Method | Endpoint            | Description         |
+| ------ | ------------------- | ------------------- |
+| POST   | `/api/category/`    | Create new category |
+| GET    | `/api/category/`    | Get all categories  |
+| GET    | `/api/category/:id` | Get category by ID  |
+| PUT    | `/api/category/`    | Update category     |
+| DELETE | `/api/category/:id` | Delete category     |
 
 #### Query Parameters
 
 **GET /api/todos/**
 
 ```
-?page=1                 # Halaman (default: 1)
+?page=1                 # Page number (default: 1)
 &limit=10              # Items per page (default: 10)
-&search=keyword        # Cari berdasarkan title/description
+&search=keyword        # Search by title/description
 &priority=high         # Filter by priority (high/medium/low)
 &category=1            # Filter by category ID
 &completed=true        # Filter by completion status
 ```
 
-### Contoh Penggunaan API
+### API Usage Examples
 
-#### 1. Buat Todo Baru
+#### 1. Create a New Todo
 
 ```bash
 curl -X POST http://localhost:4444/api/todos/ \
   -H "Content-Type: application/json" \
   -d '{
-    "title": "Belajar Go",
-    "description": "Belajar Gin Framework",
+    "title": "Learn Go",
+    "description": "Learn Gin Framework",
     "category_id": 1,
     "priority": "high",
     "due_date": "2026-05-20T00:00:00Z"
@@ -462,8 +476,8 @@ curl -X POST http://localhost:4444/api/todos/ \
   "message": "Todo created successfully",
   "data": {
     "id": 1,
-    "title": "Belajar Go",
-    "description": "Belajar Gin Framework",
+    "title": "Learn Go",
+    "description": "Learn Gin Framework",
     "category_id": 1,
     "priority": "high",
     "completed": false,
@@ -473,7 +487,7 @@ curl -X POST http://localhost:4444/api/todos/ \
 }
 ```
 
-#### 2. Dapatkan Semua Todo dengan Filter
+#### 2. Get All Todos with Filters
 
 ```bash
 curl -X GET "http://localhost:4444/api/todos/?page=1&limit=10&priority=high&completed=false"
@@ -485,82 +499,82 @@ curl -X GET "http://localhost:4444/api/todos/?page=1&limit=10&priority=high&comp
 curl -X PUT http://localhost:4444/api/todos/1 \
   -H "Content-Type: application/json" \
   -d '{
-    "title": "Belajar Go Advanced",
+    "title": "Learn Advanced Go",
     "completed": true
   }'
 ```
 
-#### 4. Hapus Todo
+#### 4. Delete Todo
 
 ```bash
 curl -X DELETE http://localhost:4444/api/todos/1
 ```
 
-#### 5. Buat Kategori
+#### 5. Create Category
 
 ```bash
 curl -X POST http://localhost:4444/api/category/ \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "Belajar",
+    "name": "Learning",
     "color": "#FF5733"
   }'
 ```
 
 ---
 
-## Database Skema
+## Database Schema
 
-### Tabel Database
+### Database Tables
 
 #### t_todos
 
-Tabel utama untuk menyimpan data todo.
+Main table storing todo data.
 
-| Kolom       | Type      | Constraint                  | Deskripsi                   |
-| ----------- | --------- | --------------------------- | --------------------------- |
-| id          | INT       | PRIMARY KEY, AUTO_INCREMENT | Identitas unik              |
-| title       | VARCHAR   | NOT NULL                    | Judul todo                  |
-| description | TEXT      |                             | Deskripsi detail            |
-| category_id | INT       | FOREIGN KEY                 | Referensi ke t_categories   |
-| priority    | VARCHAR   |                             | Prioritas (high/medium/low) |
-| completed   | BOOLEAN   | DEFAULT false               | Status penyelesaian         |
-| due_date    | TIMESTAMP |                             | Tanggal deadline            |
-| created_at  | TIMESTAMP | DEFAULT NOW()               | Waktu pembuatan             |
+| Column      | Type      | Constraint                  | Description                |
+| ----------- | --------- | --------------------------- | -------------------------- |
+| id          | INT       | PRIMARY KEY, AUTO_INCREMENT | Unique identifier          |
+| title       | VARCHAR   | NOT NULL                    | Todo title                 |
+| description | TEXT      |                             | Detailed description       |
+| category_id | INT       | FOREIGN KEY                 | Reference to t_categories  |
+| priority    | VARCHAR   |                             | Priority (high/medium/low) |
+| completed   | BOOLEAN   | DEFAULT false               | Completion status          |
+| due_date    | TIMESTAMP |                             | Deadline date              |
+| created_at  | TIMESTAMP | DEFAULT NOW()               | Creation timestamp         |
 
 #### t_categories
 
-Tabel untuk kategori todo.
+Table storing category data.
 
-| Kolom      | Type      | Constraint                  | Deskripsi        |
-| ---------- | --------- | --------------------------- | ---------------- |
-| id         | INT       | PRIMARY KEY, AUTO_INCREMENT | Identitas unik   |
-| name       | VARCHAR   | NOT NULL                    | Nama kategori    |
-| color      | VARCHAR   |                             | Kode warna (hex) |
-| created_at | TIMESTAMP | DEFAULT NOW()               | Waktu pembuatan  |
+| Column     | Type      | Constraint                  | Description        |
+| ---------- | --------- | --------------------------- | ------------------ |
+| id         | INT       | PRIMARY KEY, AUTO_INCREMENT | Unique identifier  |
+| name       | VARCHAR   | NOT NULL                    | Category name      |
+| color      | VARCHAR   |                             | Hex color code     |
+| created_at | TIMESTAMP | DEFAULT NOW()               | Creation timestamp |
 
-### Relasi
+### Relations
 
-**Hubungan One-to-Many:**
+**One-to-Many Relationship:**
 
-- Satu Category memiliki banyak Todo
+- One Category has many Todos
 - Foreign Key: `t_todos.category_id` → `t_categories.id`
 
-### Model
+### Models
 
 **Todo Model (Go)**
 
 ```go
 type Todo struct {
-    ID          int       // Identitas unik
-    Title       string    // Judul tugas
-    Description string    // Deskripsi detail
-    CategoryID  int       // Referensi kategori
+    ID          int       // Unique identifier
+    Title       string    // Todo title
+    Description string    // Detailed description
+    CategoryID  int       // Category reference
     Category    Category  // Embedded category object
     Priority    string    // high, medium, low
-    Completed   bool      // Status penyelesaian
-    DueDate     time.Time // Tanggal deadline
-    CreatedAt   *time.Time // Waktu pembuatan
+    Completed   bool      // Completion status
+    DueDate     time.Time // Deadline date
+    CreatedAt   *time.Time // Creation timestamp
 }
 ```
 
@@ -568,10 +582,10 @@ type Todo struct {
 
 ```go
 type Category struct {
-    ID        int       // Identitas unik
-    Name      string    // Nama kategori
-    Color     string    // Kode warna (hex)
-    CreatedAt time.Time // Waktu pembuatan
+    ID        int       // Unique identifier
+    Name      string    // Category name
+    Color     string    // Hex color code
+    CreatedAt time.Time // Creation timestamp
 }
 ```
 
@@ -594,7 +608,15 @@ interface Todo {
 
 ![erd](https://res.cloudinary.com/dmx8hcmxh/image/upload/v1778906893/todo.drawio_lrvdht.png)
 
-Relasi: One-to-Many
-- Satu kategori dapat memiliki banyak todo
-- Setiap todo harus memiliki satu kategori
+Relationship: One-to-Many
+
+- One category can have many todos
+- Each todo must have one category
+
 ```
+<<<<<<< Updated upstream
+=======
+
+---
+```
+>>>>>>> Stashed changes
