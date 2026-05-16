@@ -1,0 +1,34 @@
+app:
+  name: coding_challenge
+  port: ":4444"
+  db:
+    postgres:
+      dbhost: postgres
+      dbuser: postgres
+      dbpassword: aduhai
+      dbname: coding_challenge
+  cors:
+    allowed_origins:
+      - "http://localhost:5173"
+    allowed_methods:
+      - "GET"
+      - "POST"
+      - "PUT"
+      - "PATCH"
+      - "DELETE"
+      - "OPTIONS"
+    allowed_headers:
+      - "*"
+      - "Access-Control-Allow-Origin"
+      - "Access-Control-Allow-Methods"
+      - "Access-Control-Allow-Headers"
+      - "Access-Control-Allow-Credentials"
+      - "Origin"
+      - "Content-Type"
+      - "Accept"
+      - "Authorization"
+    allow_credentials: true
+
+migration:
+  path: "./sql"
+  enabled: true
