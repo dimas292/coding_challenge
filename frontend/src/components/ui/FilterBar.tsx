@@ -36,10 +36,10 @@ const FilterBar = ({
   };
 
   return (
-    <div className="filter-bar">
+    <div className="filter-bar filter-options">
       <Select
         placeholder="Select Priority"
-        style={{ width: 200 }}
+        className="filter-select"
         allowClear
         onChange={handlePriorityChange}
       >
@@ -49,7 +49,7 @@ const FilterBar = ({
       </Select>
       <Select
         placeholder="Select Category"
-        style={{ width: 200 }}
+        className="filter-select"
         allowClear
         onChange={handleCategoryChange}
       >
@@ -62,7 +62,7 @@ const FilterBar = ({
       </Select>
       <Select
         placeholder="Select Status"
-        style={{ width: 200 }}
+        className="filter-select"
         allowClear
         onChange={handleStatusChange}
       >

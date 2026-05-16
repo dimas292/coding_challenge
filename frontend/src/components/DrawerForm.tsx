@@ -77,7 +77,7 @@ const DrawerForm: React.FC<DrawerFormProps> = ({
   return (
     <Drawer
       title={title}
-      size={720}
+      width={720}
       onClose={onClose}
       open={open}
       styles={{ body: { paddingBottom: 80 } }}
@@ -112,7 +112,7 @@ const FormFields: React.FC<{
   return (
     <>
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} sm={12}>
           <Form.Item
             name="title"
             label="Title"
@@ -124,7 +124,7 @@ const FormFields: React.FC<{
       </Row>
 
       <Row gutter={16}>
-        <Col span={24}>
+        <Col xs={24}>
           <Form.Item
             name="description"
             label="Description"
@@ -136,7 +136,7 @@ const FormFields: React.FC<{
       </Row>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} sm={12}>
           <Form.Item
             name="category_id"
             label="Category"
@@ -148,7 +148,7 @@ const FormFields: React.FC<{
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} sm={12}>
           <Form.Item
             name="priority"
             label="Priority"
@@ -167,7 +167,7 @@ const FormFields: React.FC<{
       </Row>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} sm={12}>
           <Form.Item
             name="completed"
             label="Completed"
@@ -182,7 +182,7 @@ const FormFields: React.FC<{
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} sm={12}>
           <Form.Item
             name="due_date"
             label="Due Date"
@@ -198,7 +198,7 @@ const FormFields: React.FC<{
       </Row>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} sm={12}>
           <Form.Item
             name="created_at"
             label="Created At"

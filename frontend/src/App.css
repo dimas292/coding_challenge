@@ -202,3 +202,43 @@
   padding: 12px 24px;
   background-color: #fafafa;
 }
+
+.filter-select {
+  width: 200px;
+}
+
+@media (max-width: 768px) {
+  .todo-header-container .action-bar {
+    padding: 12px;
+    height: auto;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .filter-select {
+    width: 100% !important;
+  }
+
+  .search-input-box {
+    max-width: 100% !important;
+  }
+  
+  .action-right {
+    width: 100%;
+  }
+  
+  .action-right button {
+    width: 100%;
+  }
+
+  .page-title-section {
+    padding: 12px;
+  }
+}

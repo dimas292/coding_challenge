@@ -72,7 +72,7 @@ export const getTableColumns = (): ColumnProps<Todo>[] => {
       title: "Created At",
       dataIndex: "created_at",
       sorter: (a, b) => compareDates(a.created_at, b.created_at),
-      render: (date: string) => formatDate(date),
+      render: (date: string | null) => formatDate(date),
     },
     {
       title: "Action",

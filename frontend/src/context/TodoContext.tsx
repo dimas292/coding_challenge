@@ -14,8 +14,8 @@ export interface Todo {
   category: Category;
   priority: string;
   completed: boolean;
-  due_date: string;
-  created_at: string;
+  due_date: string | null;
+  created_at: string | null;
 }
 
 interface TodoContextType {

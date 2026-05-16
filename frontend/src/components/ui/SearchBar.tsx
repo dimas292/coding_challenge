@@ -7,11 +7,11 @@ interface SearchBarProps {
 export const SearchBar = ({
   onSearch,
 }: SearchBarProps & { onChange?: (value: string) => void }) => (
-  <div className="filter-bar">
+  <div className="filter-bar search-bar-container">
     <Input.Search
       placeholder="Cari Data..."
       allowClear
-      style={{ maxWidth: 400 }}
+      className="search-input-box"
       onSearch={onSearch}
     />
   </div>

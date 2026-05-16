@@ -26,6 +26,7 @@ const DataTable: React.FC<DataTableProps> = ({
       dataSource={data}
       onChange={onChange}
       rowKey="id"
+      scroll={{ x: 'max-content' }}
       showSorterTooltip={{ target: "sorter-icon" }}
       pagination={
         pagination
