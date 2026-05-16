@@ -4,7 +4,7 @@ import (
 	"backend-coding-challenge/config"
 	"backend-coding-challenge/database"
 	"backend-coding-challenge/handler"
-	"backend-coding-challenge/model"
+	"backend-coding-challenge/migration"
 	"backend-coding-challenge/repository"
 	"backend-coding-challenge/router"
 	"backend-coding-challenge/service"
@@ -82,14 +82,18 @@ func (s *Server) Category() {
 }
 
 func (s *Server) Migrate() {
-	migration := s.Config.Migration
-	if migration.Enabled {
-		fmt.Println("running migration")
-		s.DB.AutoMigrate(&model.Todo{}, &model.Category{})
+	migrationConfig := s.Config.Migration
+	if migrationConfig.Enabled {
+		fmt.Println("=== Running Manual Migrations ===")
+		if err := migration.RunAll(s.DB); err != nil {
+			log.Fatalf("migration failed: %v", err)
+		}
 
 		// seed initial data
+		fmt.Println("\n=== Seeding Initial Data ===")
 		database.SeedCategories(s.DB)
 		database.SeedTodos(s.DB)
+		fmt.Println("✓ Data seeding completed")
 	}
 }
 

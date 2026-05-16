@@ -23,6 +23,9 @@
    - [Relations](#relations)
    - [Models](#models)
    - [Entity-Relationship Diagram](#entity-relationship-diagram)
+7. [Database Migrations](#database-migrations)
+   - [Creating a New Migration](#creating-a-new-migration)
+   - [Migration Examples](#migration-examples)
 
 ---
 
@@ -613,10 +616,171 @@ Relationship: One-to-Many
 - One category can have many todos
 - Each todo must have one category
 
+---
+
+## Database Migrations
+
+### Overview
+
+This project uses manual GORM migrations for database schema management. Each migration is tracked in the `migrations` table and runs only once.
+
+**Migration Files Location:** `backend/migration/`
+
+| File | Purpose |
+|------|---------|
+| `migration.go` | Core runner with idempotent logic and tracking |
+| `001_create_migrations_table.go` | Creates `migrations` tracking table |
+| `002_create_categories_table.go` | Creates `t_categories` table |
+| `003_create_todos_table.go` | Creates `t_todos` table with foreign key |
+| `004_add_indexes.go` | Adds performance indexes |
+
+### How Migrations Work
+
+1. **Idempotent Execution** - Each migration runs only once per deployment
+2. **Tracked in Database** - Migration history stored in `migrations` table
+3. **Reversible** - Every migration has `Up()` and `Down()` methods
+4. **Ordered** - Executed sequentially in the order defined in `migration.go`
+
+### Creating a New Migration
+
+**Step 1:** Create a new file in `backend/migration/005_your_migration_name.go`
+
+```go
+package migration
+
+import "gorm.io/gorm"
+
+type YourMigrationName struct{}
+
+func (m *YourMigrationName) Name() string {
+    return "YourMigrationName"
+}
+
+func (m *YourMigrationName) Up(db *gorm.DB) error {
+    return db.Exec(`
+        ALTER TABLE t_todos ADD COLUMN IF NOT EXISTS tags VARCHAR(255);
+    `).Error
+}
+
+func (m *YourMigrationName) Down(db *gorm.DB) error {
+    return db.Exec(`
+        ALTER TABLE t_todos DROP COLUMN IF EXISTS tags;
+    `).Error
+}
 ```
-<<<<<<< Updated upstream
-=======
+
+**Step 2:** Register in `backend/migration/migration.go`
+
+```go
+var migrations = []Migration{
+    &CreateCategoriesTable{},
+    &CreateTodosTable{},
+    &CreateMigrationsTable{},
+    &AddIndexes{},
+    &YourMigrationName{},  // Add here
+}
+```
+
+**Step 3:** Rebuild and run
+
+```bash
+cd backend
+go build -o server
+./server  # Migrations run automatically on startup
+```
+
+### Migration Examples
+
+**Example 1: Add a new column with default value**
+
+```go
+func (m *AddStatusColumn) Up(db *gorm.DB) error {
+    return db.Exec(`
+        ALTER TABLE t_todos 
+        ADD COLUMN IF NOT EXISTS status VARCHAR(50) DEFAULT 'pending';
+    `).Error
+}
+
+func (m *AddStatusColumn) Down(db *gorm.DB) error {
+    return db.Exec(`
+        ALTER TABLE t_todos DROP COLUMN IF EXISTS status;
+    `).Error
+}
+```
+
+**Example 2: Create a new table**
+
+```go
+func (m *CreateCommentsTable) Up(db *gorm.DB) error {
+    return db.Exec(`
+        CREATE TABLE IF NOT EXISTS t_comments (
+            id SERIAL PRIMARY KEY,
+            todo_id INT NOT NULL REFERENCES t_todos(id) ON DELETE CASCADE,
+            content TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        
+        CREATE INDEX IF NOT EXISTS idx_comments_todo_id ON t_comments(todo_id);
+    `).Error
+}
+
+func (m *CreateCommentsTable) Down(db *gorm.DB) error {
+    return db.Exec("DROP TABLE IF EXISTS t_comments;").Error
+}
+```
+
+**Example 3: Add foreign key constraint**
+
+```go
+func (m *AddForeignKey) Up(db *gorm.DB) error {
+    return db.Exec(`
+        ALTER TABLE t_todos 
+        ADD CONSTRAINT fk_todos_category 
+        FOREIGN KEY (category_id) 
+        REFERENCES t_categories(id) ON DELETE SET NULL;
+    `).Error
+}
+
+func (m *AddForeignKey) Down(db *gorm.DB) error {
+    return db.Exec(`
+        ALTER TABLE t_todos 
+        DROP CONSTRAINT IF EXISTS fk_todos_category;
+    `).Error
+}
+```
+
+### Best Practices
+
+✅ **DO:**
+- Use `CREATE TABLE IF NOT EXISTS` and `DROP TABLE IF EXISTS`
+- Always implement both `Up()` and `Down()` methods
+- Use descriptive migration names
+- Test migrations locally before deploying
+- Keep migrations focused on a single change
+
+❌ **DON'T:**
+- Skip the `Down()` method
+- Hardcode IDs or specific values
+- Make migrations too large with multiple unrelated changes
+- Forget to update the `migrations` array in `migration.go`
+
+### Checking Migration Status
+
+Query the migrations table to see execution history:
+
+```sql
+SELECT * FROM migrations ORDER BY id DESC;
+```
+
+Output:
+```
+ id |         name          | batch |        executed_at
+----+-----------------------+-------+----------------------------
+  3 | AddIndexes            |     3 | 2026-05-16 06:42:31
+  2 | CreateTodosTable      |     2 | 2026-05-16 06:42:31
+  1 | CreateCategoriesTable |     1 | 2026-05-16 06:42:31
+```
 
 ---
+
 ```
->>>>>>> Stashed changes
