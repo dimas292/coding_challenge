@@ -6,11 +6,25 @@ import (
 	"backend-coding-challenge/utils"
 )
 
-type TodoService struct {
-	repo *repository.TodoRepository
+type TodoRepositoryInterface interface {
+	Create(todo *model.Todo) error
+	Update(todo *model.Todo) error
+	Delete(todo *model.Todo) error
+	GetByID(id string) (*model.Todo, error)
+	GetAll(params utils.TodoFilterParam) (utils.FormatTodoResponse, error)
 }
 
+type TodoService struct {
+	repo TodoRepositoryInterface
+}
+
+// NewTodoService creates a new TodoService with a concrete repository.
 func NewTodoService(repo *repository.TodoRepository) *TodoService {
+	return &TodoService{repo: repo}
+}
+
+// NewTodoServiceWithInterface creates a new TodoService with any implementation of TodoRepositoryInterface.
+func NewTodoServiceWithInterface(repo TodoRepositoryInterface) *TodoService {
 	return &TodoService{repo: repo}
 }
 

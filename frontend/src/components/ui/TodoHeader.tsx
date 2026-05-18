@@ -19,7 +19,7 @@ export const TodoHeader = ({ onAddTodo }: TodoHeaderProps) => (
           icon={<PlusCircleOutlined />}
           onClick={onAddTodo}
         >
-          Tambah Todo
+          Add Todo
         </Button>
       </div>
     </div>
